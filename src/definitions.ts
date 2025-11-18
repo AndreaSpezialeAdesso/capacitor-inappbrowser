@@ -17,9 +17,22 @@ export interface BtnEvent {
   url: string;
 }
 
+export interface DownloadEvent {
+  /**
+   * Emitted when a download is requested from within the webview.
+   * App can handle the download (e.g., save to file)
+   */
+  url: string;
+  userAgent?: string;
+  contentDisposition?: string;
+  mimetype?: string;
+  contentLength?: number;
+}
+
 export type UrlChangeListener = (state: UrlEvent) => void;
 export type ConfirmBtnListener = (state: BtnEvent) => void;
 export type ButtonNearListener = (state: object) => void;
+export type DownloadListener = (event: DownloadEvent) => void;
 
 export enum BackgroundColor {
   WHITE = 'white',
@@ -681,6 +694,13 @@ export interface InAppBrowserPlugin {
    * Will be triggered when page load error
    */
   addListener(eventName: 'pageLoadError', listenerFunc: () => void): Promise<PluginListenerHandle>;
+
+  /**
+   * Will be triggered when a download is requested from within the webview.
+   * App can handle the download (e.g., save to file)
+   */
+  addListener(eventName: 'downloadEvent', listenerFunc: DownloadListener): Promise<PluginListenerHandle>;
+
   /**
    * Remove all listeners for this plugin.
    *

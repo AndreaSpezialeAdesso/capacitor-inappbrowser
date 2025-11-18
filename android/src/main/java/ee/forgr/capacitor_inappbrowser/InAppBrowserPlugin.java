@@ -53,6 +53,7 @@ public class InAppBrowserPlugin extends Plugin implements WebViewDialog.Permissi
     private final String pluginVersion = "7.29.1";
 
     public static final String CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome"; // Change when in stable
+    private static final String DOWNLOAD_EVENT = "download";
     private CustomTabsClient customTabsClient;
     private CustomTabsSession currentSession;
     private WebViewDialog webViewDialog = null;
@@ -602,6 +603,18 @@ public class InAppBrowserPlugin extends Plugin implements WebViewDialog.Permissi
                         jsObject.put("rawMessage", message);
                         notifyListeners("messageFromWebview", jsObject);
                     }
+                }
+
+                @Override
+                public void downloadEvent(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                    JSObject obj = new JSObject();
+                    obj.put("type", DOWNLOAD_EVENT);
+                    obj.put("url", url);
+                    obj.put("userAgent", userAgent);
+                    obj.put("contentDisposition", contentDisposition);
+                    obj.put("mimetype", mimetype);
+                    obj.put("contentLength", contentLength);
+                    notifyListeners("downloadEvent", obj);
                 }
             }
         );

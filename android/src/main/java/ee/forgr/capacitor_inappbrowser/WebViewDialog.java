@@ -36,6 +36,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
+import android.webkit.DownloadListener;
 import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -846,6 +847,22 @@ public class WebViewDialog extends Dialog {
                     }
 
                     return false;
+                }
+            }
+        );
+
+        // Handle downloads initiated from the WebView (e.g. PDFs)
+        // Emits a downloadEvent to JS with all download metadata so the app can handle it
+        _webView.setDownloadListener(
+            new DownloadListener() {
+                @Override
+                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                    Log.d("InAppBrowser", "Download requested: " + url + " mime: " + mimeType);
+                    if (_options != null && _options.getCallbacks() != null) {
+                        _options.getCallbacks().downloadEvent(url, userAgent, contentDisposition, mimeType, contentLength);
+                    } else {
+                        Log.w("InAppBrowser", "Could not emit download event - options or callbacks are null");
+                    }
                 }
             }
         );

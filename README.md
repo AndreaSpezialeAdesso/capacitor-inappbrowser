@@ -216,6 +216,7 @@ window.mobileApp.close();
 * [`addListener('messageFromWebview', ...)`](#addlistenermessagefromwebview-)
 * [`addListener('browserPageLoaded', ...)`](#addlistenerbrowserpageloaded-)
 * [`addListener('pageLoadError', ...)`](#addlistenerpageloaderror-)
+* [`addListener('downloadEvent', ...)`](#addlistenerdownloadevent-)
 * [`removeAllListeners()`](#removealllisteners)
 * [`reload()`](#reload)
 * [`updateDimensions(...)`](#updatedimensions)
@@ -553,6 +554,27 @@ Will be triggered when page load error
 --------------------
 
 
+### addListener('downloadEvent', ...)
+
+```typescript
+addListener(eventName: 'downloadEvent', listenerFunc: DownloadListener) => Promise<PluginListenerHandle>
+```
+
+Will be triggered when a download is requested from within the webview.
+App can handle the download (e.g., save to file)
+
+| Param              | Type                                                          |
+| ------------------ | ------------------------------------------------------------- |
+| **`eventName`**    | <code>'downloadEvent'</code>                                  |
+| **`listenerFunc`** | <code><a href="#downloadlistener">DownloadListener</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 7.29.2
+
+--------------------
+
+
 ### removeAllListeners()
 
 ```typescript
@@ -729,6 +751,17 @@ Allows changing the size and position of the webview at runtime.
 | **`url`** | <code>string</code> | Emit when a button is clicked. | 0.0.1 |
 
 
+#### DownloadEvent
+
+| Prop                     | Type                | Description                                                                                                    | Since  |
+| ------------------------ | ------------------- | -------------------------------------------------------------------------------------------------------------- | ------ |
+| **`url`**                | <code>string</code> | Emitted when a download is requested from within the webview. App can handle the download (e.g., save to file) | 7.29.2 |
+| **`userAgent`**          | <code>string</code> |                                                                                                                |        |
+| **`contentDisposition`** | <code>string</code> |                                                                                                                |        |
+| **`mimetype`**           | <code>string</code> |                                                                                                                |        |
+| **`contentLength`**      | <code>number</code> |                                                                                                                |        |
+
+
 #### DimensionOptions
 
 | Prop         | Type                | Description                             |
@@ -793,6 +826,11 @@ Construct a type with a set of properties K of type T
 #### ConfirmBtnListener
 
 <code>(state: <a href="#btnevent">BtnEvent</a>): void</code>
+
+
+#### DownloadListener
+
+<code>(event: <a href="#downloadevent">DownloadEvent</a>): void</code>
 
 
 ### Enums
